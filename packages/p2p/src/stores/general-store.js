@@ -200,8 +200,6 @@ export default class GeneralStore extends BaseStore {
                 const is_fully_authed_but_poi_expired = hasStatuses(['authenticated', 'document_expired']);
                 const is_fully_authed_but_needs_fa =
                     is_fully_authenticated && hasStatuses(['financial_assessment_not_complete']);
-                const is_fully_authed_and_does_not_need_fa =
-                    is_fully_authenticated && !hasStatuses(['financial_assessment_not_complete']);
 
                 const is_not_fully_authenticated_and_fa_not_completed =
                     is_not_fully_authenticated && hasStatuses(['financial_assessment_not_complete']);
@@ -220,14 +218,12 @@ export default class GeneralStore extends BaseStore {
                     // Second priority: If user is blocked, don't bother asking them to submit FA.
                     this.setIsBlocked(true);
                     this.setIsLoading(false);
-                } else if (is_fully_authed_and_does_not_need_fa) {
-                    this.setIsLoading(false);
                 }
             } else if (error) {
                 this.setIsHighRiskFullyAuthedWithoutFa(false);
-                this.setIsBlocked(false);
-                this.setIsLoading(false);
             }
+
+            this.setIsLoading(false);
 
             const { sendbird_store } = this.root_store;
 
